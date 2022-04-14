@@ -1,8 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/models/transaction.dart';
-import 'package:flutter_complete_guide/widgets/new_transaction.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
-import 'package:flutter_complete_guide/widgets/user_transaction.dart';
+import 'package:flutter_complete_guide/widgets/new_transaction.dart';
+
+import 'models/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,17 +17,66 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final List<Transaction> transaction = [];
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
 
-  final titleControler = TextEditingController();
-  final amountControler = TextEditingController();
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransacrtions = [
+    Transaction(
+      id: 't1',
+      title: '운동화',
+      amount: 135000,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: '엽기떡볶이',
+      amount: 20000,
+      date: DateTime.now(),
+    ),
+  ];
+
+  void _addNewTransaction(String txTitle, int txAmount) {
+    //코드를 작성할때는 값을 알 수 없으니 const는 사용할 수 없음. 하지만이 함수가실행되면 값이 변하지 않을 예정이니 final
+    final newTx = Transaction(
+      title: txTitle,
+      amount: txAmount,
+      date: DateTime.now(),
+      id: DateTime.now().toString(), //유니크
+    );
+
+    //이 위젯은 Stateful위젯이라 SetState를 호출할 수 있음
+    setState(() {
+      _userTransacrtions.add(newTx);
+    });
+  }
+
+  void _startAddNewTrasaction(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {}, //showModalBottomSheet를 탭했을대 이 모달이 닫히지 않도록 온탭에 아무값도 지정하지 않는다.
+          child: NewTransaction(_addNewTransaction),
+          behavior: HitTestBehavior.opaque, //안닫히도록 함.
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter App'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddNewTrasaction(context),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         /*
@@ -54,9 +104,14 @@ class MyHomePage extends StatelessWidget {
                 elevation: 5,
               ),
             ),
-            UserTransactions(),
+            TransactionList(_userTransacrtions),
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTrasaction(context),
       ),
     );
   }

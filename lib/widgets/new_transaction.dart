@@ -10,13 +10,14 @@ class NewTransaction extends StatelessWidget {
     final enteredTitle = titleControler.text;
     final enteredAmount = amountControler.text;
 
-    if (enteredTitle.isEmpty || enteredAmount.isEmpty || int.parse(enteredAmount) < 0) {
+    if ((enteredTitle.isEmpty || enteredAmount.isEmpty) ||
+        enteredAmount.isNotEmpty && int.parse(enteredAmount) < 0) {
       return;
     }
 
     addTx(
       enteredTitle,
-      enteredAmount,
+      int.parse(enteredAmount),
     );
   }
 
