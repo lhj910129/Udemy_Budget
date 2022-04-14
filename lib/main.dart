@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/widgets/chart.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
 import 'package:flutter_complete_guide/widgets/new_transaction.dart';
 
@@ -49,6 +50,17 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // ),
   ];
+
+  //최근7일의 거래내역만 반환하는 함수
+  List<Transaction> get recentTransactions{
+    return _userTransacrtions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _addNewTransaction(String txTitle, int txAmount) {
     //코드를 작성할때는 값을 알 수 없으니 const는 사용할 수 없음. 하지만이 함수가실행되면 값이 변하지 않을 예정이니 final
@@ -111,15 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                //카드의 부모가 크기가 정의되지않았을때 자식의 크기에 맞춰진다.
-                color: Colors.blue,
-                child: Text('이곳에 차트'),
-                elevation: 5,
-              ),
-            ),
+            Chart(recentTransactions),
             TransactionList(_userTransacrtions),
           ],
         ),
