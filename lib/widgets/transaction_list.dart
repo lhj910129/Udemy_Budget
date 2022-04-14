@@ -28,7 +28,7 @@ class TransactionList extends StatelessWidget {
                   ),
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    '${transactions[index].amount} 원',
+                    '${transactions[index].amount.toStringAsFixed(0)} 원', //toStringAsFixed ==소수점릿수 표시 길이
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
