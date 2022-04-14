@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/transaction.dart';
+import 'package:flutter_complete_guide/models/transaction.dart';
+import 'package:flutter_complete_guide/widgets/transaction_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,19 +16,13 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   final List<Transaction> transaction = [
-    Transaction(
-      id: 't1',
-      title: '운동화',
-      amount: 135000,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: '엽기떡볶이',
-      amount: 20000,
-      date: DateTime.now(),
-    ),
+    
   ];
+
+  // String titleInput;
+  // String amountInput;
+  final titleControler = TextEditingController();
+  final amountControler = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +31,7 @@ class MyHomePage extends StatelessWidget {
         title: Text('Flutter App'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
@@ -48,53 +43,43 @@ class MyHomePage extends StatelessWidget {
               elevation: 5,
             ),
           ),
-          Column(
-            children: transaction.map((tx) {
-              return Card(
-                child: Row(
-                  children: [
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.purple,
-                          width: 2,
-                        ),
+          Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: '제목',
                       ),
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        tx.amount.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.purple,
-                        ),
+                      controller: titleControler,
+                      // onChanged: (val){
+
+                      //   titleInput = val;
+                      // },//키를 입력할때마다 실행
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: '금액',
                       ),
+                      controller: amountControler,
+                      // onChanged: (val){
+                      //   amountInput = val;
+                      // },
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          tx.title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          tx.date.toString(),
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+                    FlatButton(
+                      onPressed: () {
+                        print(titleControler);
+                      },
+                      child: Text('추가하기'),
+                      textColor: Colors.purple,
+                    )
+                  ]),
+            ),
           ),
+          TransactionList()
         ],
       ),
     );
