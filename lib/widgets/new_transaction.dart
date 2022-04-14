@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
-  final titleControler = TextEditingController();
-  final amountControler = TextEditingController();
+class NewTransaction extends StatefulWidget {
   final Function addTx; //userTransaction의 _addTx를 가져오기 위한 아규먼트 추가
   NewTransaction(this.addTx);
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleControler = TextEditingController();
+
+  final amountControler = TextEditingController();
 
   void submitData() {
     final enteredTitle = titleControler.text;
@@ -15,10 +22,12 @@ class NewTransaction extends StatelessWidget {
       return;
     }
 
-    addTx(
+    widget.addTx(
       enteredTitle,
       int.parse(enteredAmount),
     );
+
+    Navigator.of(context).pop();//추가를 완료하면 모달 닫기
   }
 
   @override
