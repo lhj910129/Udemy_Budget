@@ -66,7 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     //코드를 작성할때는 값을 알 수 없으니 const는 사용할 수 없음. 하지만이 함수가실행되면 값이 변하지 않을 예정이니 final
     final newTx = Transaction(
       title: txTitle,
@@ -93,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransacrtions.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
@@ -128,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(recentTransactions),
-            TransactionList(_userTransacrtions),
+            TransactionList(_userTransacrtions, _deleteTransaction),
           ],
         ),
       ),
