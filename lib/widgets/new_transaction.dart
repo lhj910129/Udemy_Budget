@@ -19,13 +19,13 @@ class _NewTransactionState extends State<NewTransaction> {
     final enteredAmount = _amountControler.text;
 
     if ((enteredTitle.isEmpty || enteredAmount.isEmpty) ||
-        enteredAmount.isNotEmpty && int.parse(enteredAmount) < 0) {
-      return;
-    }
+        enteredAmount.isNotEmpty && double.parse(enteredAmount) < 0 ||
+        _selectedDate == null) return;
 
     widget.addTx(
       enteredTitle,
       double.parse(enteredAmount),
+      _selectedDate
     );
 
     Navigator.of(context).pop(); //추가를 완료하면 모달 닫기
