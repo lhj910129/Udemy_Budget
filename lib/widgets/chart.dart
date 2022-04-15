@@ -34,7 +34,7 @@ class Chart extends StatelessWidget {
         'day': DateFormat.E().format(weekDay),
         'amount': totalSum,
       }; //DateFormat.E(날짜) == 해당 날짜의 요일을 가져온다(M,T,W...)
-    });
+    }).reversed.toList();//오래된순으로 정렬
   }
 
   double get totalSpending {
