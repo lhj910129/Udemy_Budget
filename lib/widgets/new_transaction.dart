@@ -58,8 +58,8 @@ class _NewTransactionState extends State<NewTransaction> {
               onPressed: () {
                 submitData();
               },
-              child: Text('추가하기'),
-              textColor: Colors.purple,
+              child: Text('추가'),
+              textColor: Theme.of(context).accentColor,
             )
           ],
         ),
