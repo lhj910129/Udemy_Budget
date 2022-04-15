@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/widgets/chart.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expenses',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
-        accentColor: Colors.amber,
+        accentColor: Colors.indigoAccent,
         fontFamily: 'Quicksand',
         appBarTheme: AppBarTheme(
           titleTextStyle: TextStyle(
@@ -37,18 +36,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransacrtions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Nike Shoes',
-    //   amount: 135000,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'StarBucks',
-    //   amount: 20000,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'Nike Shoes',
+      amount: 135000,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'StarBucks',
+      amount: 20000,
+      date: DateTime.now(),
+    ),
   ];
 
   //최근7일의 거래내역만 반환하는 함수
