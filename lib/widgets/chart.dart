@@ -15,7 +15,7 @@ class Chart extends StatelessWidget {
         Duration(days: index),
       );
 
-      int totalSum = 0; //총금액담는 용도
+      double totalSum = 0; //총금액담는 용도
 
       //최근1주 거래내역목록중에서
       for (var i = 0; i < recentTransactions.length; i++) {
@@ -61,7 +61,7 @@ class Chart extends StatelessWidget {
                 data['amount'],
                 totalSpending == 0.0
                     ? 0.0
-                    : (data['amount'] as int) / totalSpending,
+                    : (data['amount'] as double) / totalSpending,
               ),
             );
           }).toList(),

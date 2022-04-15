@@ -23,6 +23,11 @@ class MyApp extends StatelessWidget {
             //fontWeight: FontWeight.bold,
           ),
         ),
+        textTheme: ThemeData.light().textTheme.copyWith(
+              button: TextStyle(
+                color: Colors.white,
+              ),
+            ),
       ),
       home: MyHomePage(),
     );
@@ -39,19 +44,19 @@ class _MyHomePageState extends State<MyHomePage> {
     Transaction(
       id: 't1',
       title: 'Nike Shoes',
-      amount: 135000,
+      amount: 130.00,
       date: DateTime.now(),
     ),
     Transaction(
       id: 't2',
       title: 'StarBucks',
-      amount: 20000,
+      amount: 25.00,
       date: DateTime.now(),
     ),
   ];
 
   //최근7일의 거래내역만 반환하는 함수
-  List<Transaction> get recentTransactions{
+  List<Transaction> get recentTransactions {
     return _userTransacrtions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
@@ -61,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, int txAmount) {
+  void _addNewTransaction(String txTitle, double txAmount) {
     //코드를 작성할때는 값을 알 수 없으니 const는 사용할 수 없음. 하지만이 함수가실행되면 값이 변하지 않을 예정이니 final
     final newTx = Transaction(
       title: txTitle,

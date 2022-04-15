@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx; //userTransaction의 _addTx를 가져오기 위한 아규먼트 추가
@@ -9,13 +10,13 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleControler = TextEditingController();
+  final _titleControler = TextEditingController();
+  final _amountControler = TextEditingController();
+  DateTime _selectedDate;
 
-  final amountControler = TextEditingController();
-
-  void submitData() {
-    final enteredTitle = titleControler.text;
-    final enteredAmount = amountControler.text;
+  void _submitData() {
+    final enteredTitle = _titleControler.text;
+    final enteredAmount = _amountControler.text;
 
     if ((enteredTitle.isEmpty || enteredAmount.isEmpty) ||
         enteredAmount.isNotEmpty && int.parse(enteredAmount) < 0) {
@@ -24,10 +25,26 @@ class _NewTransactionState extends State<NewTransaction> {
 
     widget.addTx(
       enteredTitle,
-      int.parse(enteredAmount),
+      double.parse(enteredAmount),
     );
 
-    Navigator.of(context).pop();//추가를 완료하면 모달 닫기
+    Navigator.of(context).pop(); //추가를 완료하면 모달 닫기
+  }
+
+  //DatePicker
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) return;
+
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -41,25 +58,48 @@ class _NewTransactionState extends State<NewTransaction> {
           children: <Widget>[
             TextField(
               decoration: InputDecoration(
-                labelText: '제목',
+                labelText: 'Title',
               ),
-              controller: titleControler,
-              onSubmitted: (_) => submitData(),
+              controller: _titleControler,
+              onSubmitted: (_) => _submitData(),
             ),
             TextField(
               decoration: InputDecoration(
-                labelText: '금액',
+                labelText: 'Anmount',
               ),
-              controller: amountControler,
+              controller: _amountControler,
               keyboardType: TextInputType.number, //키보드 타입을 숫자입력형태로
-              onSubmitted: (_) => submitData, //(_)=> 파라미터 사용하지 않을거니까 신경쓰지 말라는 뜻
+              onSubmitted: (_) =>
+                  _submitData, //(_)=> 파라미터 사용하지 않을거니까 신경쓰지 말라는 뜻
             ),
-            FlatButton(
-              onPressed: () {
-                submitData();
-              },
-              child: Text('추가'),
-              textColor: Theme.of(context).accentColor,
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    _selectedDate == null
+                        ? 'No Date Chosen.'
+                        : 'Piked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                  ),
+                ),
+                TextButton(
+                  onPressed: _presentDatePicker,
+                  child: Text(
+                    'Choose Date.',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              onPressed: _submitData,
+              child: Text(
+                'Add',
+              ),
+              textColor: Theme.of(context).textTheme.button.color,
             )
           ],
         ),
