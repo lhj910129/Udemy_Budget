@@ -11,20 +11,24 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
-        ? Column(
-            children: [
-              Text('No transactions added yet!'),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 200,
-                child: Image.asset(
-                  'assets/images/waiting.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
+        ? LayoutBuilder(
+            builder: (ctx, constraints) {
+              return Column(
+                children: [
+                  Text('No transactions added yet!'),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: constraints.maxHeight * 0.6,
+                    child: Image.asset(
+                      'assets/images/waiting.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              );
+            },
           )
         : ListView.builder(
             //10개정도는 ListView(children: <Widget>[])으로 충분하다. 데이터 많을땐 리스트뷰빌더를 사용할 것
@@ -55,8 +59,7 @@ class TransactionList extends StatelessWidget {
                     '${DateFormat.yMMMd().format(transactions[index].date)}',
                   ),
                   trailing: IconButton(
-                    onPressed: () =>
-                        deleteTransaction(transactions[index].id),
+                    onPressed: () => deleteTransaction(transactions[index].id),
                     icon: Icon(Icons.delete),
                     color: Theme.of(context).errorColor,
                   ),

@@ -139,6 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation ==
+        Orientation.landscape; //세로모드인지 가로모드인지 구분용
     final appBar = AppBar(
       title: Text(
         'Personal Expenses',
@@ -152,6 +154,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
+    final txListWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(_userTransacrtions, _deleteTransaction),
+    );
     return Scaffold(
       appBar: appBar, //앱바를 변수로 만든 이유 : 앱바의 높이는 이미 있어서 어디에서나 액세스 할 수 있다.
       body: SingleChildScrollView(
@@ -171,34 +180,44 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Show Chart'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  },
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Show Chart'),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                height: (MediaQuery.of(context).size.height - //기기 전체 사이즈
+                        appBar.preferredSize.height - //AppBar크기
+                        MediaQuery.of(context).padding.top) * //상태표시줄 크기
+                    0.3,
+                child: Chart(
+                  recentTransactions,
                 ),
-              ],
-            ),
-            _showChart
-                ? Container(
-                    height: (MediaQuery.of(context).size.height - //기기 전체 사이즈
-                            appBar.preferredSize.height - //AppBar크기
-                            MediaQuery.of(context).padding.top) * //상태표시줄 크기
-                        0.3,
-                    child: Chart(recentTransactions))
-                : Container(
-                    height: (MediaQuery.of(context).size.height -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.7,
-                    child: TransactionList(
-                        _userTransacrtions, _deleteTransaction)),
+              ),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height - //기기 전체 사이즈
+                              appBar.preferredSize.height - //AppBar크기
+                              MediaQuery.of(context).padding.top) * //상태표시줄 크기
+                          0.7,
+                      child: Chart(
+                        recentTransactions,
+                      ),
+                    )
+                  : txListWidget,
           ],
         ),
       ),
