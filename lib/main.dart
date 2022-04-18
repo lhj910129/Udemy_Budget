@@ -139,7 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape = MediaQuery.of(context).orientation ==
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation ==
         Orientation.landscape; //세로모드인지 가로모드인지 구분용
     final appBar = AppBar(
       title: Text(
@@ -155,9 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final txListWidget = Container(
-      height: (MediaQuery.of(context).size.height -
+      height: (mediaQuery.size.height -
               appBar.preferredSize.height -
-              MediaQuery.of(context).padding.top) *
+              mediaQuery.padding.top) *
           0.7,
       child: TransactionList(_userTransacrtions, _deleteTransaction),
     );
@@ -197,9 +198,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             if (!isLandscape)
               Container(
-                height: (MediaQuery.of(context).size.height - //기기 전체 사이즈
+                height: (mediaQuery.size.height - //기기 전체 사이즈
                         appBar.preferredSize.height - //AppBar크기
-                        MediaQuery.of(context).padding.top) * //상태표시줄 크기
+                        mediaQuery.padding.top) * //상태표시줄 크기
                     0.3,
                 child: Chart(
                   recentTransactions,
@@ -209,9 +210,9 @@ class _MyHomePageState extends State<MyHomePage> {
             if (isLandscape)
               _showChart
                   ? Container(
-                      height: (MediaQuery.of(context).size.height - //기기 전체 사이즈
+                      height: (mediaQuery.size.height - //기기 전체 사이즈
                               appBar.preferredSize.height - //AppBar크기
-                              MediaQuery.of(context).padding.top) * //상태표시줄 크기
+                              mediaQuery.padding.top) * //상태표시줄 크기
                           0.7,
                       child: Chart(
                         recentTransactions,
