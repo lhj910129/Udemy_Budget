@@ -50,42 +50,42 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransacrtions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Nike Shoes',
-    //   amount: 130.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'StarBucks',
-    //   amount: 25.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't3',
-    //   title: 'Nike Shoes',
-    //   amount: 130.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't4',
-    //   title: 'StarBucks',
-    //   amount: 25.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't5',
-    //   title: 'Nike Shoes',
-    //   amount: 130.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't6',
-    //   title: 'StarBucks',
-    //   amount: 25.00,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'Nike Shoes',
+      amount: 130.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'StarBucks',
+      amount: 25.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Nike Shoes',
+      amount: 130.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'StarBucks',
+      amount: 25.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't5',
+      title: 'Nike Shoes',
+      amount: 130.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't6',
+      title: 'StarBucks',
+      amount: 25.00,
+      date: DateTime.now(),
+    ),
   ];
 
   //최근7일의 거래내역만 반환하는 함수
