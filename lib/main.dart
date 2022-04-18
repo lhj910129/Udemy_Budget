@@ -185,8 +185,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     //페이지 바디
-    final pageBody = SingleChildScrollView(
-      /*
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
+        /*
         SingleChildScrollView = listView(childiren : [])
         내부 요소들의 크기만큼 스크롤이 가능하게한다.
         
@@ -199,50 +200,54 @@ class _MyHomePageState extends State<MyHomePage> {
         데이터가 셀수없이 많을때 빌더를 사용할것.
         
         */
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Show Chart'),
-                Switch.adaptive(
-                  //안드에선 머테리얼디자인, ios에선 쿠퍼티노로 표시된다.
-                  value: _showChart,
-                  activeColor: Theme.of(context).accentColor,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  },
-                ),
-              ],
-            ),
-          if (!isLandscape)
-            Container(
-              height: (mediaQuery.size.height - //기기 전체 사이즈
-                      appBar.preferredSize.height - //AppBar크기
-                      mediaQuery.padding.top) * //상태표시줄 크기
-                  0.3,
-              child: Chart(
-                recentTransactions,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Show Chart',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  Switch.adaptive(
+                    //안드에선 머테리얼디자인, ios에선 쿠퍼티노로 표시된다.
+                    value: _showChart,
+                    activeColor: Theme.of(context).accentColor,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  ),
+                ],
               ),
-            ),
-          if (!isLandscape) txListWidget,
-          if (isLandscape)
-            _showChart
-                ? Container(
-                    height: (mediaQuery.size.height - //기기 전체 사이즈
-                            appBar.preferredSize.height - //AppBar크기
-                            mediaQuery.padding.top) * //상태표시줄 크기
-                        0.7,
-                    child: Chart(
-                      recentTransactions,
-                    ),
-                  )
-                : txListWidget,
-        ],
+            if (!isLandscape)
+              Container(
+                height: (mediaQuery.size.height - //기기 전체 사이즈
+                        appBar.preferredSize.height - //AppBar크기
+                        mediaQuery.padding.top) * //상태표시줄 크기
+                    0.3,
+                child: Chart(
+                  recentTransactions,
+                ),
+              ),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (mediaQuery.size.height - //기기 전체 사이즈
+                              appBar.preferredSize.height - //AppBar크기
+                              mediaQuery.padding.top) * //상태표시줄 크기
+                          0.7,
+                      child: Chart(
+                        recentTransactions,
+                      ),
+                    )
+                  : txListWidget,
+          ],
+        ),
       ),
     );
 

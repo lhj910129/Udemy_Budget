@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/widgets/adaptive_flat_button.dart';
 import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
@@ -53,7 +57,8 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 10,
             left: 10,
             right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,//하단 키보드를 포함해 +10
+            bottom:
+                MediaQuery.of(context).viewInsets.bottom + 10, //하단 키보드를 포함해 +10
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -83,22 +88,13 @@ class _NewTransactionState extends State<NewTransaction> {
                           : 'Piked Date: ${DateFormat.yMd().format(_selectedDate)}',
                     ),
                   ),
-                  TextButton(
-                    onPressed: _presentDatePicker,
-                    child: Text(
-                      'Choose Date.',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  AdaptiveFlatButton('Chose Date!', _presentDatePicker)
                 ],
               ),
               RaisedButton(
                 color: Theme.of(context).primaryColor,
                 onPressed: _submitData,
-                child: Text(
+                child: const Text(
                   'Add',
                 ),
                 textColor: Theme.of(context).textTheme.button.color,
