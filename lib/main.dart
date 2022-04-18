@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/widgets/chart.dart';
@@ -140,21 +142,40 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation ==
-        Orientation.landscape; //세로모드인지 가로모드인지 구분용
-    final appBar = AppBar(
-      title: Text(
-        'Personal Expenses',
-        style: TextStyle(fontFamily: 'OpenSans'),
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => _startAddNewTrasaction(context),
-        )
-      ],
-    );
+    final isLandscape =
+        mediaQuery.orientation == Orientation.landscape; //세로모드인지 가로모드인지 구분용
 
+    //앱바
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expenses',
+              style: TextStyle(fontFamily: 'OpenSans'),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTrasaction(context),
+                )
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text(
+              'Personal Expenses',
+              style: TextStyle(fontFamily: 'OpenSans'),
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => _startAddNewTrasaction(context),
+              ),
+            ],
+          );
+
+    //트랜잭션 리스트
     final txListWidget = Container(
       height: (mediaQuery.size.height -
               appBar.preferredSize.height -
@@ -162,10 +183,10 @@ class _MyHomePageState extends State<MyHomePage> {
           0.7,
       child: TransactionList(_userTransacrtions, _deleteTransaction),
     );
-    return Scaffold(
-      appBar: appBar, //앱바를 변수로 만든 이유 : 앱바의 높이는 이미 있어서 어디에서나 액세스 할 수 있다.
-      body: SingleChildScrollView(
-        /*
+
+    //페이지 바디
+    final pageBody = SingleChildScrollView(
+      /*
         SingleChildScrollView = listView(childiren : [])
         내부 요소들의 크기만큼 스크롤이 가능하게한다.
         
@@ -178,55 +199,69 @@ class _MyHomePageState extends State<MyHomePage> {
         데이터가 셀수없이 많을때 빌더를 사용할것.
         
         */
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Show Chart'),
-                  Switch(
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            if (!isLandscape)
-              Container(
-                height: (mediaQuery.size.height - //기기 전체 사이즈
-                        appBar.preferredSize.height - //AppBar크기
-                        mediaQuery.padding.top) * //상태표시줄 크기
-                    0.3,
-                child: Chart(
-                  recentTransactions,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (isLandscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Show Chart'),
+                Switch.adaptive(
+                  //안드에선 머테리얼디자인, ios에선 쿠퍼티노로 표시된다.
+                  value: _showChart,
+                  activeColor: Theme.of(context).accentColor,
+                  onChanged: (val) {
+                    setState(() {
+                      _showChart = val;
+                    });
+                  },
                 ),
+              ],
+            ),
+          if (!isLandscape)
+            Container(
+              height: (mediaQuery.size.height - //기기 전체 사이즈
+                      appBar.preferredSize.height - //AppBar크기
+                      mediaQuery.padding.top) * //상태표시줄 크기
+                  0.3,
+              child: Chart(
+                recentTransactions,
               ),
-            if (!isLandscape) txListWidget,
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: (mediaQuery.size.height - //기기 전체 사이즈
-                              appBar.preferredSize.height - //AppBar크기
-                              mediaQuery.padding.top) * //상태표시줄 크기
-                          0.7,
-                      child: Chart(
-                        recentTransactions,
-                      ),
-                    )
-                  : txListWidget,
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTrasaction(context),
+            ),
+          if (!isLandscape) txListWidget,
+          if (isLandscape)
+            _showChart
+                ? Container(
+                    height: (mediaQuery.size.height - //기기 전체 사이즈
+                            appBar.preferredSize.height - //AppBar크기
+                            mediaQuery.padding.top) * //상태표시줄 크기
+                        0.7,
+                    child: Chart(
+                      recentTransactions,
+                    ),
+                  )
+                : txListWidget,
+        ],
       ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar, //앱바를 변수로 만든 이유 : 앱바의 높이는 이미 있어서 어디에서나 액세스 할 수 있다.
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () => _startAddNewTrasaction(context),
+                  ),
+          );
   }
 }
