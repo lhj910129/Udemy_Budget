@@ -106,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //신규입력
-  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     //코드를 작성할때는 값을 알 수 없으니 const는 사용할 수 없음. 하지만이 함수가실행되면 값이 변하지 않을 예정이니 final
     final newTx = Transaction(
       title: txTitle,
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-  
+
   //삭제
   void _deleteTransaction(String id) {
     setState(() {
@@ -144,9 +145,58 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //가로모드
-  void _buildLandscapeContent(){}
+  List<Widget> _buildLandscapeContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return <Widget>[
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Show Chart',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Switch.adaptive(
+            //안드에선 머테리얼디자인, ios에선 쿠퍼티노로 표시된다.
+            value: _showChart,
+            activeColor: Theme.of(context).accentColor,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          ),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height - //기기 전체 사이즈
+                      appBar.preferredSize.height - //AppBar크기
+                      mediaQuery.padding.top) * //상태표시줄 크기
+                  0.7,
+              child: Chart(
+                recentTransactions,
+              ),
+            )
+          : txListWidget,
+    ];
+  }
+
   //세로모드
-  void _buildPortraitContent(){}
+  List<Widget> _buildPortraitContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return <Widget>[
+      Container(
+        height: (mediaQuery.size.height - //기기 전체 사이즈
+                appBar.preferredSize.height - //AppBar크기
+                mediaQuery.padding.top) * //상태표시줄 크기
+            0.3,
+        child: Chart(
+          recentTransactions,
+        ),
+      ),
+      txListWidget,
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,49 +262,19 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            //리스트앞에 점세개를 붙이면 단일항목으로 병합한다는 뜻!
             if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Show Chart',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  Switch.adaptive(
-                    //안드에선 머테리얼디자인, ios에선 쿠퍼티노로 표시된다.
-                    value: _showChart,
-                    activeColor: Theme.of(context).accentColor,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  ),
-                ],
+              ..._buildLandscapeContent(
+                mediaQuery,
+                appBar,
+                txListWidget,
               ),
             if (!isLandscape)
-              Container(
-                height: (mediaQuery.size.height - //기기 전체 사이즈
-                        appBar.preferredSize.height - //AppBar크기
-                        mediaQuery.padding.top) * //상태표시줄 크기
-                    0.3,
-                child: Chart(
-                  recentTransactions,
-                ),
+              ..._buildPortraitContent(
+                mediaQuery,
+                appBar,
+                txListWidget,
               ),
-            if (!isLandscape) txListWidget,
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: (mediaQuery.size.height - //기기 전체 사이즈
-                              appBar.preferredSize.height - //AppBar크기
-                              mediaQuery.padding.top) * //상태표시줄 크기
-                          0.7,
-                      child: Chart(
-                        recentTransactions,
-                      ),
-                    )
-                  : txListWidget,
           ],
         ),
       ),
