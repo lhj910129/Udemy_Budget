@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/widgets/chart.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
 import 'package:flutter_complete_guide/widgets/new_transaction.dart';
 
 import 'models/transaction.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // //SystemChrome앱에 대한 조명이나 전체설정등을 세팅할 수 잇음.
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -41,18 +50,42 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransacrtions = [
-    Transaction(
-      id: 't1',
-      title: 'Nike Shoes',
-      amount: 130.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'StarBucks',
-      amount: 25.00,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Nike Shoes',
+    //   amount: 130.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'StarBucks',
+    //   amount: 25.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't3',
+    //   title: 'Nike Shoes',
+    //   amount: 130.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't4',
+    //   title: 'StarBucks',
+    //   amount: 25.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't5',
+    //   title: 'Nike Shoes',
+    //   amount: 130.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't6',
+    //   title: 'StarBucks',
+    //   amount: 25.00,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   //최근7일의 거래내역만 반환하는 함수
@@ -73,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
       title: txTitle,
       amount: txAmount,
       date: chosenDate,
-      id: DateTime.now().toString(), //유니크
+      id: DateTime.now().toString(), //유니크 id 현재시간으로
     );
 
     //이 위젯은 Stateful위젯이라 SetState를 호출할 수 있음
@@ -102,21 +135,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  bool _showChart = false; //차트표시 디폴트값
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Personal Expenses',
-          style: TextStyle(fontFamily: 'OpenSans'),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _startAddNewTrasaction(context),
-          )
-        ],
+    final appBar = AppBar(
+      title: Text(
+        'Personal Expenses',
+        style: TextStyle(fontFamily: 'OpenSans'),
       ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _startAddNewTrasaction(context),
+        )
+      ],
+    );
+
+    return Scaffold(
+      appBar: appBar, //앱바를 변수로 만든 이유 : 앱바의 높이는 이미 있어서 어디에서나 액세스 할 수 있다.
       body: SingleChildScrollView(
         /*
         SingleChildScrollView = listView(childiren : [])
@@ -133,9 +170,35 @@ class _MyHomePageState extends State<MyHomePage> {
         */
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Chart(recentTransactions),
-            TransactionList(_userTransacrtions, _deleteTransaction),
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Show Chart'),
+                Switch(
+                  value: _showChart,
+                  onChanged: (val) {
+                    setState(() {
+                      _showChart = val;
+                    });
+                  },
+                ),
+              ],
+            ),
+            _showChart
+                ? Container(
+                    height: (MediaQuery.of(context).size.height - //기기 전체 사이즈
+                            appBar.preferredSize.height - //AppBar크기
+                            MediaQuery.of(context).padding.top) * //상태표시줄 크기
+                        0.3,
+                    child: Chart(recentTransactions))
+                : Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.7,
+                    child: TransactionList(
+                        _userTransacrtions, _deleteTransaction)),
           ],
         ),
       ),
