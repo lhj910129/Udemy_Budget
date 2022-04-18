@@ -51,6 +51,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //더미데이터
   final List<Transaction> _userTransacrtions = [
     Transaction(
       id: 't1',
@@ -90,6 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  //가로모드 세로모드 구분해서 차트 표시구분용
+  bool _showChart = false;
+
   //최근7일의 거래내역만 반환하는 함수
   List<Transaction> get recentTransactions {
     return _userTransacrtions.where((tx) {
@@ -101,8 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate) {
+  //신규입력
+  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
     //코드를 작성할때는 값을 알 수 없으니 const는 사용할 수 없음. 하지만이 함수가실행되면 값이 변하지 않을 예정이니 final
     final newTx = Transaction(
       title: txTitle,
@@ -117,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //입력창 닫히지 않게 하는 함수
   void _startAddNewTrasaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -130,14 +135,18 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-
+  
+  //삭제
   void _deleteTransaction(String id) {
     setState(() {
       _userTransacrtions.removeWhere((tx) => tx.id == id);
     });
   }
 
-  bool _showChart = false; //차트표시 디폴트값
+  //가로모드
+  void _buildLandscapeContent(){}
+  //세로모드
+  void _buildPortraitContent(){}
 
   @override
   Widget build(BuildContext context) {
