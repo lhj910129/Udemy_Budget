@@ -22,11 +22,7 @@ class _NewTransactionState extends State<NewTransaction> {
         enteredAmount.isNotEmpty && double.parse(enteredAmount) < 0 ||
         _selectedDate == null) return;
 
-    widget.addTx(
-      enteredTitle,
-      double.parse(enteredAmount),
-      _selectedDate
-    );
+    widget.addTx(enteredTitle, double.parse(enteredAmount), _selectedDate);
 
     Navigator.of(context).pop(); //추가를 완료하면 모달 닫기
   }
@@ -49,59 +45,66 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Title',
-              ),
-              controller: _titleControler,
-              onSubmitted: (_) => _submitData(),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Anmount',
-              ),
-              controller: _amountControler,
-              keyboardType: TextInputType.number, //키보드 타입을 숫자입력형태로
-              onSubmitted: (_) =>
-                  _submitData, //(_)=> 파라미터 사용하지 않을거니까 신경쓰지 말라는 뜻
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    _selectedDate == null
-                        ? 'No Date Chosen.'
-                        : 'Piked Date: ${DateFormat.yMd().format(_selectedDate)}',
-                  ),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,//하단 키보드를 포함해 +10
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Title',
                 ),
-                TextButton(
-                  onPressed: _presentDatePicker,
-                  child: Text(
-                    'Choose Date.',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
+                controller: _titleControler,
+                onSubmitted: (_) => _submitData(),
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Anmount',
+                ),
+                controller: _amountControler,
+                keyboardType: TextInputType.number, //키보드 타입을 숫자입력형태로
+                onSubmitted: (_) =>
+                    _submitData, //(_)=> 파라미터 사용하지 않을거니까 신경쓰지 말라는 뜻
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? 'No Date Chosen.'
+                          : 'Piked Date: ${DateFormat.yMd().format(_selectedDate)}',
                     ),
                   ),
-                ),
-              ],
-            ),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: _submitData,
-              child: Text(
-                'Add',
+                  TextButton(
+                    onPressed: _presentDatePicker,
+                    child: Text(
+                      'Choose Date.',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              textColor: Theme.of(context).textTheme.button.color,
-            )
-          ],
+              RaisedButton(
+                color: Theme.of(context).primaryColor,
+                onPressed: _submitData,
+                child: Text(
+                  'Add',
+                ),
+                textColor: Theme.of(context).textTheme.button.color,
+              )
+            ],
+          ),
         ),
       ),
     );
