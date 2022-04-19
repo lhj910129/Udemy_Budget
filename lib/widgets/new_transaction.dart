@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx; //userTransaction의 _addTx를 가져오기 위한 아규먼트 추가
-  NewTransaction(this.addTx);
+  NewTransaction(this.addTx) {
+    print('Contructor NewTransaction');
+  }
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -17,6 +19,29 @@ class _NewTransactionState extends State<NewTransaction> {
   final _titleControler = TextEditingController();
   final _amountControler = TextEditingController();
   DateTime _selectedDate;
+
+  //_NewTransactionState() {
+  //print('Contructor  NewTransactionState Widget');
+  //}
+
+  //initState 태초에 빌드될때만 실행한다. 상태변화나 리빌드일땐 안함. 초기데이터 가져올때 보통 사용한다.
+  @override
+  void initState() {
+    print('initstate');
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant NewTransaction oldWidget) {
+    print('didUpdateWidget');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    print('dispose');
+    super.dispose();
+  }
 
   void _submitData() {
     final enteredTitle = _titleControler.text;

@@ -50,45 +50,45 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   //더미데이터
   final List<Transaction> _userTransacrtions = [
-    Transaction(
-      id: 't1',
-      title: 'Nike Shoes',
-      amount: 130.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'StarBucks',
-      amount: 25.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't3',
-      title: 'Nike Shoes',
-      amount: 130.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't4',
-      title: 'StarBucks',
-      amount: 25.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't5',
-      title: 'Nike Shoes',
-      amount: 130.00,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't6',
-      title: 'StarBucks',
-      amount: 25.00,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Nike Shoes',
+    //   amount: 130.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'StarBucks',
+    //   amount: 25.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't3',
+    //   title: 'Nike Shoes',
+    //   amount: 130.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't4',
+    //   title: 'StarBucks',
+    //   amount: 25.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't5',
+    //   title: 'Nike Shoes',
+    //   amount: 130.00,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't6',
+    //   title: 'StarBucks',
+    //   amount: 25.00,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   //가로모드 세로모드 구분해서 차트 표시구분용
@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _startAddNewTrasaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
-      builder: (_) {
+      builder: (context) {
         return GestureDetector(
           onTap:
               () {}, //showModalBottomSheet를 탭했을대 이 모달이 닫히지 않도록 온탭에 아무값도 지정하지 않는다.
@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //가로모드
   List<Widget> _buildLandscapeContent(
-      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+      MediaQueryData mediaQuery, var appBar, Widget txListWidget) {
     return <Widget>[
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //세로모드
   List<Widget> _buildPortraitContent(
-      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+      MediaQueryData mediaQuery, var appBar, Widget txListWidget) {
     return <Widget>[
       Container(
         height: (mediaQuery.size.height - //기기 전체 사이즈
@@ -196,6 +196,27 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       txListWidget,
     ];
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);//this를 관찰하겠다
+    super.initState();
+  }
+
+  //앱의 수명주기 확인용! -> 앱이 새로운 상태가 될때마다 호출될 예정
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    // TODO: implement didChangeAppLifecycleState
+    //super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance
+        .removeObserver(this); //위젯바인딩을 참조하여 앱수명주기에 대한 모든 리스너를 삭제한다 (메모리관리)
+    super.dispose();
   }
 
   @override
@@ -270,11 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 txListWidget,
               ),
             if (!isLandscape)
-              ..._buildPortraitContent(
-                mediaQuery,
-                appBar,
-                txListWidget,
-              ),
+              ..._buildPortraitContent(mediaQuery, appBar, txListWidget),
           ],
         ),
       ),
