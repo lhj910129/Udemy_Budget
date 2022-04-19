@@ -1,15 +1,43 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
-class TransactionItem extends StatelessWidget {
-  const TransactionItem(
-      {Key key, @required this.transaction, @required this.deleteTransaction})
-      : super(key: key);
+class TransactionItem extends StatefulWidget {
+  const TransactionItem({
+    Key key,
+    @required this.transaction,
+    @required this.deleteTransaction,
+  }) : super(key: key);
 
   final Transaction transaction;
   final Function deleteTransaction;
+
+  @override
+  State<TransactionItem> createState() => _TransactionItemState();
+}
+
+class _TransactionItemState extends State<TransactionItem> {
+  Color _bgColor;
+
+  @override
+  void initState() {
+    const availableColors = [
+      Colors.red,
+      Colors.orange,
+      Colors.yellow,
+      Colors.green,
+      Colors.lightBlue,
+      Colors.blue,
+      Colors.purple,
+    ];
+
+    _bgColor = availableColors[Random().nextInt(7)];
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +49,21 @@ class TransactionItem extends StatelessWidget {
       ),
       child: ListTile(
         leading: CircleAvatar(
+          backgroundColor: _bgColor,
           radius: 30,
           child: Padding(
             padding: const EdgeInsets.all(6),
             child: FittedBox(
-              child: Text('\$${transaction.amount.toStringAsFixed(2)}'),
+              child: Text('\$${widget.transaction.amount.toStringAsFixed(2)}'),
             ),
           ),
         ),
         title: Text(
-          '${transaction.title}',
+          '${widget.transaction.title}',
           style: Theme.of(context).textTheme.titleMedium,
         ),
         subtitle: Text(
-          '${DateFormat.yMMMd().format(transaction.date)}',
+          '${DateFormat.yMMMd().format(widget.transaction.date)}',
         ),
         trailing:
             MediaQuery.of(context).size.width > 460 //전체가로길이가 460보다 클때 == 가로모드일때
@@ -42,10 +71,12 @@ class TransactionItem extends StatelessWidget {
                     icon: Icon(Icons.delete),
                     textColor: Theme.of(context).errorColor,
                     label: const Text('Delete'),
-                    onPressed: () => deleteTransaction(transaction.id),
+                    onPressed: () =>
+                        widget.deleteTransaction(widget.transaction.id),
                   )
                 : IconButton(
-                    onPressed: () => deleteTransaction(transaction.id),
+                    onPressed: () =>
+                        widget.deleteTransaction(widget.transaction.id),
                     icon: const Icon(Icons.delete),
                     color: Theme.of(context).errorColor,
                   ),

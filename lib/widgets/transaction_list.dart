@@ -31,15 +31,27 @@ class TransactionList extends StatelessWidget {
               );
             },
           )
-        : ListView.builder(
-            //10개정도는 ListView(children: <Widget>[])으로 충분하다. 데이터 많을땐 리스트뷰빌더를 사용할 것
-            itemCount: transactions.length,
-            itemBuilder: (ctx, index) {
-              return TransactionItem(
-                transaction: transactions[index],
-                deleteTransaction: deleteTransaction,
-              );
-            },
+        : ListView(
+            children: transactions
+                .map(
+                  (e) => TransactionItem(
+                    key: ValueKey(e.id), //UniqueKey를 사용하면 리빌드될때마다 바뀌기 때문에 밸류키로 매칭시킨다
+                    transaction: e,
+                    deleteTransaction: deleteTransaction,
+                  ),
+                )
+                .toList(),
           );
+
+    // ListView.builder(
+    //     //10개정도는 ListView(children: <Widget>[])으로 충분하다. 데이터 많을땐 리스트뷰빌더를 사용할 것
+    //     itemCount: transactions.length,
+    //     itemBuilder: (ctx, index) {
+    //       return TransactionItem(
+    //         transaction: transactions[index],
+    //         deleteTransaction: deleteTransaction,
+    //       );
+    //     },
+    //   );
   }
 }
